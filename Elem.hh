@@ -1,5 +1,6 @@
 #pragma once 
-#include "fond.hh"
+
+
 class Elem{
 protected:
 	int _posX;

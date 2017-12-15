@@ -1,9 +1,9 @@
 #include "fond.hh"
-#include "Elem.hh"
+
 
 SDL_Surface *ecran, *imageDeFond, *zozor;
 
-void Fond::init(){
+void fond::init(){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
@@ -12,7 +12,7 @@ void Fond::init(){
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 }
 
-void anime(int x, int y) //position x,y du perso
+void fond::anime(int x, int y) //position x,y du perso
 {
 	SDL_Rect positionFond, positionZozor;
 	int avanceX = 1, avanceY = 1; // Ces variables diront si zozor doit avancer ou reculer.
@@ -35,7 +35,7 @@ void anime(int x, int y) //position x,y du perso
 }
 
 
-void input_handle(void)
+void fond::input_handle(void)
 {
 	j = Joueur(0,0,"zoro");
 	SDL_Event event;

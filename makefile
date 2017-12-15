@@ -1,33 +1,27 @@
-# options de compilation
-CC = g++
-CCFLAGS = -Wall -I -g -std=c++11 sdl-config --cflags --libs
+CC=g++ -g
+CCFLAGS= -Wall -Werror -std=c++11 `sdl-config` -libs
+LIBFLAGS= -ltinyxml2 
+SRC= $(wildcard *.cc)
+OBJ= $(SRC:.cc=.o)
+EXEC= flow 
 
 
 
-# fichiers du projet
-SRC = main.cc joueur.cc fond.cc
-OBJ = $(SRC:.c=.o)
-EXEC = main
 
-
-# règle initiale
 all: $(EXEC)
 
-# dépendance des .hh
-joueur.o: personnage.hh joueur.hh
-fond.o: fond.hh Elem.hh
 
-# règles de compilation
-%.o: %.c
+$(EXEC): $(OBJ)
+	$(CC) $^ -o $@   $(LIBFLAGS)
+
+%.o: %.cc
 	$(CC) $(CCFLAGS) -o $@ -c $<
 
-# règles d'édition de liens
-$(EXEC): $(OBJ)
-	$(CC) -o $@ $^  $(CCFLAGS)
+.depends:
+	g++ -MM $(SRC) > .depends
 
+-include .depends
 
-# règles supplémentaires
 clean:
-	rm -f *.o
-rmproper:
-	rm -f $(EXEC) *.o
+	rm -f $(OBJ) $(EXEC) 
+

@@ -1,11 +1,12 @@
 #include <SDL/SDL.h>
+#include "Elem.hh"
 
-class Fond{
+class fond{
 private:
 	int _longueurEcran;
 	int _hauteurEcran;
 public:
-	Fond(int lg, int h):_longueurEcran(lg), _hauteurEcran(h){};
+	fond(int lg, int h):_longueurEcran(lg), _hauteurEcran(h){}; //taille de l'ecran
 	int getLg(){return _longueurEcran;};
 	int getH(){return _hauteurEcran;};
 	void setLg(int lg){_longueurEcran = lg;};
