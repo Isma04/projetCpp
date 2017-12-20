@@ -1,3 +1,4 @@
+#pragma once 
 #include "Elem.hh"
 #include <string>
 

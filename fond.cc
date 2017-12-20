@@ -3,7 +3,7 @@
 
 SDL_Surface *ecran, *imageDeFond, *zozor;
 
-void fond::init(){
+void Fond::init(){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
@@ -12,10 +12,10 @@ void fond::init(){
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 }
 
-void fond::anime(int x, int y) //position x,y du perso
+void Fond::anime(int x, int y) //position x,y du perso
 {
 	SDL_Rect positionFond, positionZozor;
-	int avanceX = 1, avanceY = 1; // Ces variables diront si zozor doit avancer ou reculer.
+	//int avanceX = 1, avanceY = 1; // Ces variables diront si zozor doit avancer ou reculer.
 
 	positionFond.x = 0;
 	positionFond.y = 0;
@@ -35,9 +35,9 @@ void fond::anime(int x, int y) //position x,y du perso
 }
 
 
-void fond::input_handle(void)
+void Fond::input_handle() // FOND A DONNER POUR DEPLACEMENT 
 {
-	j = Joueur(0,0,"zoro");
+	Joueur j(0,0,"zoro");
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
@@ -55,10 +55,12 @@ void fond::input_handle(void)
                     exit(0);
                     break;
                 case SDLK_RSHIFT:
-                	j.Deplacement(3,0);
+                	j.Deplacement(3,0,f);
                 	break;
                 case SDLK_LSHIFT:
-                	j.Deplacement(-3,0);
+                	j.Deplacement(-3,0,f);
+                	break;
+                default:
                 	break;
 
             }

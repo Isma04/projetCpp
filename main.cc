@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	fond f(690,390);
+	Fond f(690,390);
 	f.init();
 	f.anime(0,0);
 

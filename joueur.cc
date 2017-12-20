@@ -1,7 +1,7 @@
 #include "joueur.hh"
 
 
-void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, fond f){
+void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, Fond f){
    	int longueur = f.getLg();
    	int hauteur = f.getH();
 
