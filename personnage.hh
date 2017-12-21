@@ -8,5 +8,5 @@ protected:
 	FILE* perso; //aspect perso ???
 public:
 	Personnage(int x, int y, std::string name): Elem(x,y),_name(name){};
-	virtual void Deplacement(int x, int y);
+	//virtual void Deplacement(int x, int y);
 };

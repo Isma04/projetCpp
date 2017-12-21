@@ -1,5 +1,6 @@
 CC=g++ -g
-CCFLAGS= -Wall -Werror -std=c++11 `sdl-config` -libs
+CCFLAGS= -Wall -Werror -std=c++11 
+LDFLAGS= -lSDL
 LIBFLAGS= -ltinyxml2 
 SRC= $(wildcard *.cc)
 OBJ= $(SRC:.cc=.o)
@@ -12,7 +13,7 @@ all: $(EXEC)
 
 
 $(EXEC): $(OBJ)
-	$(CC) $^ -o $@   $(LIBFLAGS)
+	$(CC) $^ $(LDFLAGS) -o $@   $(LIBFLAGS)
 
 %.o: %.cc
 	$(CC) $(CCFLAGS) -o $@ -c $<

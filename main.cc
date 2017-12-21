@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include "joueur.hh"
-#include "string.hh"
+#include <string>
+#include "fond.hh"
 
 int main(void)
 {
