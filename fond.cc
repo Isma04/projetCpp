@@ -37,10 +37,16 @@ void Fond::anime(int x, int y) //position x,y du perso
 		//SDL_Delay(10);
 		j.setX(a);
 		j.setY(b);
+
+		// j.setY(a); // ca le deplace EN DIAGONALE LA POSITION Y CHANGE !!!!!! 
+		// LE PROBLEME VIENT PAS DES TOUCHES UP ET DOWN NON PLUS !!! Cool ! 
+
 		positionZozor.x = j.getX();
 		positionZozor.y = j.getY();
 		cout<<positionZozor.x<<endl;
 		cout<<positionZozor.y<<endl;
+		//cout<< " hello voila le b" << endl;
+		//cout<<b<<endl;
 	}
 	//cout<<positionZozor.x<<endl;
 
@@ -110,22 +116,22 @@ void Fond::input_handle(int &a, int &b, Joueur j) // FOND A DONNER POUR DEPLACEM
                 case SDLK_RIGHT:
 
                 	cout<<"exit bye suz"<<endl;
-                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(30,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
                 	//c[0]=a;
 
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(-30,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
                 	//c[1]=b;
                 	break;
                 case SDLK_UP:
-                	j.Deplacement(0,3,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(0,30,_longueurEcran,_hauteurEcran);
                 	b = j.getY();
                 	break;
                 case SDLK_DOWN:
-                	j.Deplacement(0,-3,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(0,-30,_longueurEcran,_hauteurEcran);
                 	b = j.getY();
                 	break;
                 default:
