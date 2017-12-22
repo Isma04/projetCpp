@@ -26,7 +26,7 @@ void Fond::anime(int x, int y) //position x,y du perso
 	positionZozor.x = x;
 	positionZozor.y = y;
 
-
+	SDL_EnableKeyRepeat(10,5);
 	while (1) {
 
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
@@ -34,12 +34,11 @@ void Fond::anime(int x, int y) //position x,y du perso
 		SDL_Flip(ecran); // On affiche réellement l'image.
 		input_handle(a, b, j); // On appelle le gestionnaire d'évènements.
 		
-		//SDL_Delay(10);
+		SDL_Delay(10); //attend 10ms pour rafraichir la page 
 		j.setX(a);
 		j.setY(b);
 
-		// j.setY(a); // ca le deplace EN DIAGONALE LA POSITION Y CHANGE !!!!!! 
-		// LE PROBLEME VIENT PAS DES TOUCHES UP ET DOWN NON PLUS !!! Cool ! 
+		//j.setY(a); // ca le deplace EN DIAGONALE LA POSITION Y CHANGE !!!!!! 
 
 		positionZozor.x = j.getX();
 		positionZozor.y = j.getY();
@@ -98,6 +97,7 @@ void Fond::input_handle(int &a, int &b, Joueur j) // FOND A DONNER POUR DEPLACEM
 	//int b=j.getY();
 	//int c = 0;
 	//int c
+	
 	while (SDL_PollEvent(&event)) {
 
 		switch (event.type) {
@@ -116,22 +116,22 @@ void Fond::input_handle(int &a, int &b, Joueur j) // FOND A DONNER POUR DEPLACEM
                 case SDLK_RIGHT:
 
                 	cout<<"exit bye suz"<<endl;
-                	j.Deplacement(30,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
                 	//c[0]=a;
 
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-30,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
                 	//c[1]=b;
                 	break;
                 case SDLK_UP:
-                	j.Deplacement(0,30,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(0,3,_longueurEcran,_hauteurEcran);
                 	b = j.getY();
                 	break;
                 case SDLK_DOWN:
-                	j.Deplacement(0,-30,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(0,-3,_longueurEcran,_hauteurEcran);
                 	b = j.getY();
                 	break;
                 default:
