@@ -14,6 +14,6 @@ public:
 	//void setH(int h){_hauteurEcran = h;};
 	void init();
 	void anime(int x, int y);
-	void input_handle(Joueur j);
+	void input_handle(int &a, int &b, Joueur j);
 
 };

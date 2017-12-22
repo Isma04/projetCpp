@@ -8,7 +8,7 @@ int main(void)
 {
 	Fond f(690,390);
 	f.init();
-	f.anime(0,0);
+	f.anime(0,300);
 
 	return 0;
 }
