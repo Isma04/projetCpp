@@ -17,7 +17,7 @@ void Fond::anime(int x, int y) //position x,y du perso
 {
 	SDL_Rect positionFond, positionZozor;
 	//int avanceX = 1, avanceY = 1; // Ces variables diront si zozor doit avancer ou reculer.
-	Joueur j(x,y,"zoro");
+	Joueur j(x,y,"zoro", 5, 5, 0.5); 
 	int a = x;
 	int b = y;
 	positionFond.x = 0;
@@ -118,22 +118,25 @@ void Fond::input_handle(int &a, int &b, Joueur j) // FOND A DONNER POUR DEPLACEM
                 	cout<<"exit bye suz"<<endl;
                 	j.Deplacement(3,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
+                	b = j.getY();
                 	//c[0]=a;
 
                    	break;
                 case SDLK_LEFT:
                 	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran);
                 	a = j.getX();
+                	b = j.getY();
                 	//c[1]=b;
                 	break;
                 case SDLK_UP:
-                	j.Deplacement(0,3,_longueurEcran,_hauteurEcran);
+                	j.saut();
                 	b = j.getY();
+                	a = j.getX();
                 	break;
-                case SDLK_DOWN:
-                	j.Deplacement(0,-3,_longueurEcran,_hauteurEcran);
-                	b = j.getY();
-                	break;
+                // case SDLK_DOWN:
+                // 	j.Deplacement(0,-3,_longueurEcran,_hauteurEcran);
+                // 	b = j.getY();
+                // 	break;
                 default:
                 	break;
 

@@ -32,11 +32,21 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
 
     	cout<<_posX<<endl;
     }
-    else if (valeur_deplacementY != 0 && _posY + valeur_deplacementY <= hauteur && _posY + valeur_deplacementY >= 0){ //saut
-        cout<<"deplacement haut"<<endl;
-        _posY -= valeur_deplacementY;
-        cout << _posY << endl;
+    if (_posY == 390 && _vitesse < 0) { }
+    else {
+
+        _posY -= _vitesse;
+        _vitesse -= _poids;
     }
+
+
+    // else if (valeur_deplacementY != 0 && _posY + valeur_deplacementY <= hauteur && _posY + valeur_deplacementY >= 0){ //saut
+    //     cout<<"deplacement haut"<<endl;
+
+    //     _posY -= valeur_deplacementY;
+
+    //     cout << _posY << endl;
+    // }
     //else if (_posX + valeur_deplacementX >= 0) {
     //    _posX += valeur_deplacementX;
     //}
@@ -49,4 +59,10 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
     // }
 
 
+}
+
+void Joueur::saut(){
+  
+    _vitesse = _impulsion;
+    
 }
