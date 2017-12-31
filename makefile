@@ -1,7 +1,6 @@
 CC=g++ -g
 CCFLAGS= -Wall -Werror -std=c++11 
 LDFLAGS= -lSDL
-LIBFLAGS= -ltinyxml2 
 SRC= $(wildcard *.cc)
 OBJ= $(SRC:.cc=.o)
 EXEC= flow 

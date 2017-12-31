@@ -23,7 +23,7 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, Fond 
 }
 
 */
-
+/* VOILA LA BONNE FONCTION 
 void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur){
     cout<<"salut deplacement1"<<endl;
     if (valeur_deplacementX != 0 && _posX + valeur_deplacementX <= longueur && _posX + valeur_deplacementX >= 0){ //avancee
@@ -38,6 +38,25 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
         _posY -= _vitesse;
         _vitesse -= _poids;
     }
+
+    */
+
+void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur){
+    cout<<"salut deplacement1"<<endl;
+    if (valeur_deplacementX != 0 && _posX + valeur_deplacementX < longueur && _posX + valeur_deplacementX >= 0){ //avancee
+        cout<<"deplacement droite"<<endl;
+        _posX += valeur_deplacementX;
+
+        cout<<_posX<<endl;
+    }
+
+
+    //if (_posY == 390 && _vitesse < 0) { }
+    //else {
+
+    //    _posY -= _vitesse;
+    //    _vitesse -= _poids;
+    //}
 
 
     // else if (valeur_deplacementY != 0 && _posY + valeur_deplacementY <= hauteur && _posY + valeur_deplacementY >= 0){ //saut
@@ -62,7 +81,33 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
 }
 
 void Joueur::saut(){
-  
-    _vitesse = _impulsion;
-    
+    cout<<"HELLO LE SAUT "<<endl;
+   _vitesse = _impulsion;
+//	_posY -= _vitesse;
+	if (_posY < 390 && _vitesse != 0)
+	{
+		//_posY -= _vitesse;
+		_vitesse -= _poids;
+	_posY -= _vitesse;
+	cout<<"Boris"<<endl;
+    }
+	else {}
+	
+    //_vitesse = _impulsion;
+    //if (_posY == 390 && _vitesse < 0) { }
+    //else {
+
+    //    _posY -= _vitesse;
+    //    _vitesse -= _poids;
+    //}
+}
+
+
+
+void Joueur::chute(const int &SOL){
+        cout<<"HELLO LA CHUTE "<<endl;
+        
+        _impulsion=_poids;
+        _vitesse=0;
+        _posY=SOL;
 }
