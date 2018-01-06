@@ -7,79 +7,61 @@
 #include <iterator>
 
 using namespace std;
-SDL_Surface *ecran, *imageDeFond, *zozor;
+SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture;;
 int HAUTEUR_PERSO;
 int LG_PERSO;
 // int SOL;
+
+//Pour afficher le score
+void PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,...)
+{ // l'image doit faire 16 * 14 caractères.
+    char buf[500];
+    int i,len;
+    SDL_Rect Rsrc,Rdst;
+    va_list args;
+    va_start(args,text);
+    vsprintf(buf,text,args);
+    va_end(args);
+    Rsrc.w = font->w/16;
+    Rsrc.h = font->h/14;
+    len = (int)strlen(buf);
+    for(i=0;i<len;i++)
+    {
+        Rsrc.x = Rsrc.w*((unsigned char)(buf[i])%16);
+        Rsrc.y = Rsrc.h*((unsigned char)(buf[i])/16-2);  // on saute les 31 premiers codes ASCII
+        Rdst.x = x;
+        Rdst.y = y;
+        SDL_BlitSurface(font,&Rsrc,dest,&Rdst);
+        x+=Rsrc.w;
+    }
+}
+
 
 void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
 	imageDeFond = SDL_LoadBMP("image/bahamas.bmp");
+	ecriture=SDL_LoadBMP("image/font.bmp"); //score
 	zozor = SDL_LoadBMP("image/goku1.bmp");
+	petitepiece = SDL_LoadBMP("image/pieceMini.bmp");
+
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
+	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
 	tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
 	SOL = 390 - HAUTEUR_PERSO;
-	cout << HAUTEUR_PERSO << endl;
-	cout << LG_PERSO << endl;
-	cout << SOL << endl;
+// 	cout << HAUTEUR_PERSO << endl;
+// 	cout << LG_PERSO << endl;
+// 	cout << SOL << endl;
 }
 
-// void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
-// {
-// 	SDL_Rect positionFond, positionZozor;
-// 	Joueur j(x,y,"zoro", 5, 15, 0.5); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
-// 	int a = x;
-// 	int b = y;
-// 	positionFond.x = 0;
-// 	positionFond.y = 0;
 
-// 	positionZozor.x = x;
-// 	positionZozor.y = y;
-
-// 	cout << SOL << "anime" << endl; 
-// 	SDL_EnableKeyRepeat(10,5);
-// 	while (1) {
-
-// 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
-// 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
-// 		SDL_Flip(ecran); // On affiche réellement l'image.
-// 		input_handle(a, b, j, SOL); // On appelle le gestionnaire d'évènements.
-
-// 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
-	
-
-		
-// 	    if (positionZozor.y < 70)
-// 		{
-// 			while(1){
-// 			j.setImp(0);
-// 			positionZozor.y = j.getY();
-// 			j.setY(SOL); 
-// 			}
-// 		}
-// 		else{
-// 		positionZozor.x = j.getX();
-// 		positionZozor.y = j.getY();
-// 		j.setY(b);
-// 		}
-	
-
-// 		j.setX(a);
-// 		j.setImp(10);
-// 		j.setV(2.5);
-// 		j.setP(5);
-		
-// 	}
-
-// }
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	SDL_Rect positionFond, positionZozor;
+	SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
-	Joueur j(x,y,"zoro", v, 12, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
@@ -89,32 +71,29 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	positionZozor.x = x;
 	positionZozor.y = y;
 
-	cout << SOL << "anime" << endl; 
+	int max = 350;
+	int min = 15;
+
+	srand(time(NULL));
+	int r1 = (rand() % (max - min + 1)) + min;
+    int r2=  (rand() % (max - min + 1)) + min;
+
+	positionPiece.x = r1;
+	positionPiece.y = r2;
+ 
 	SDL_EnableKeyRepeat(10,5);
 	while (1) {
 
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
+		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
+		int S=j.getScore();
+		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);
+
 		SDL_Flip(ecran); // On affiche réellement l'image.
 		input_handle(a, b, v, j, SOL, saut); // On appelle le gestionnaire d'évènements.
 
 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
-	
-
-		
-	 //    if (positionZozor.y < 70)
-		// {
-		// 	j.setImp(0);
-		// 	positionZozor.y = j.getY();
-		// 	j.setY(SOL); 
-			
-
-		// }
-		// else{
-		// 	positionZozor.x = j.getX();
-		// 	positionZozor.y = j.getY();
-		// 	j.setY(b);
-		// }
 	
 
 		j.setX(a);
@@ -122,10 +101,16 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		j.setV(v);
 		positionZozor.x = a;
 		positionZozor.y = b;
-		// j.setImp(10);
-		// j.setV(2.5);
-		// j.setP(5);
 		
+		if (check_collision(positionZozor, positionPiece) == true)
+		{
+			j.setScore(S+10);
+			r1 = (rand() % (max - min + 1)) + min;
+    	    r2=  (rand() % (max - min + 1)) + min;
+			positionPiece.x = r1;
+			positionPiece.y = r2;
+
+		}
 	}
 
 }
@@ -169,21 +154,16 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
                 	
                 	break;
                 case SDLK_UP:
+                	
                 	j.saut();
                 	v = j.getV();
-                	sautencours = 1; //on commence un saut
+                	sautencours = 1;
+                	 //on commence un saut
                 	                	
                 	break;
   
-      //           case SDLK_DOWN:
-      //           cout << SOL << endl;
-						// j.chute(SOL);
-      //            	b = j.getY();
-						// a = j.getX();
-      //            	break;
                 default:
                 	break;
-
             }
             break;
         default:
@@ -209,4 +189,49 @@ void Fond::tailleBMP(const std::string &file, int &h, int &lg){
 
 	
 }
+
+bool Fond::check_collision( SDL_Rect &A, SDL_Rect &B )
+{
+    //Les cotes des rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+ 
+    //Calcul les cotes du rectangle A
+    leftA = A.x;
+    rightA = A.x + A.w;
+    topA = A.y;
+    bottomA = A.y + A.h;
+ 
+    //Calcul les cotes du rectangle B
+    leftB = B.x;
+    rightB = B.x + B.w;
+    topB = B.y;
+    bottomB = B.y + B.h;
+        //Tests de collision
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+ 
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+ 
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+ 
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+ 
+    //Si conditions collision detectee
+    return true;
+}
+
 

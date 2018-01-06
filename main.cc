@@ -16,6 +16,7 @@ int main(void)
 	f.init(LG_PERSO, HAUTEUR_PERSO, SOL);
 	f.anime(0,SOL, SOL);
 
+
 	return 0;
 }
 

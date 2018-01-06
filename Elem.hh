@@ -2,9 +2,6 @@
 #include <iostream>
 #include <string>
 
-
-
-
 class Elem{
 protected:
 	int _posX;
