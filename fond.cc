@@ -26,13 +26,63 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	cout << SOL << endl;
 }
 
+// void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
+// {
+// 	SDL_Rect positionFond, positionZozor;
+// 	Joueur j(x,y,"zoro", 5, 15, 0.5); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+// 	int a = x;
+// 	int b = y;
+// 	positionFond.x = 0;
+// 	positionFond.y = 0;
+
+// 	positionZozor.x = x;
+// 	positionZozor.y = y;
+
+// 	cout << SOL << "anime" << endl; 
+// 	SDL_EnableKeyRepeat(10,5);
+// 	while (1) {
+
+// 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
+// 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
+// 		SDL_Flip(ecran); // On affiche réellement l'image.
+// 		input_handle(a, b, j, SOL); // On appelle le gestionnaire d'évènements.
+
+// 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
+	
+
+		
+// 	    if (positionZozor.y < 70)
+// 		{
+// 			while(1){
+// 			j.setImp(0);
+// 			positionZozor.y = j.getY();
+// 			j.setY(SOL); 
+// 			}
+// 		}
+// 		else{
+// 		positionZozor.x = j.getX();
+// 		positionZozor.y = j.getY();
+// 		j.setY(b);
+// 		}
+	
+
+// 		j.setX(a);
+// 		j.setImp(10);
+// 		j.setV(2.5);
+// 		j.setP(5);
+		
+// 	}
+
+// }
+
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
 	SDL_Rect positionFond, positionZozor;
-	//int avanceX = 1, avanceY = 1; // Ces variables diront si zozor doit avancer ou reculer.
-	Joueur j(x,y,"zoro", 5, 15, 0.5); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+	int v = 0;
+	Joueur j(x,y,"zoro", v, 12, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
 	int a = x;
 	int b = y;
+	int saut = 0; //on est au sol
 	positionFond.x = 0;
 	positionFond.y = 0;
 
@@ -46,36 +96,35 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_Flip(ecran); // On affiche réellement l'image.
-		input_handle(a, b, j, SOL); // On appelle le gestionnaire d'évènements.
+		input_handle(a, b, v, j, SOL, saut); // On appelle le gestionnaire d'évènements.
 
 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
-
-		//positionZozor.x = j.getX();
-		//positionZozor.y = j.getY();
-	
 	
 
 		
-	    if (positionZozor.y < 70)
-		{
-			while(1){
-			j.setImp(0);
-			positionZozor.y = j.getY();
-			j.setY(SOL); 
-			}
-		}
-		else{
-		positionZozor.x = j.getX();
-		positionZozor.y = j.getY();
-		//j.setX(a);
-		j.setY(b);
-		}
+	 //    if (positionZozor.y < 70)
+		// {
+		// 	j.setImp(0);
+		// 	positionZozor.y = j.getY();
+		// 	j.setY(SOL); 
+			
+
+		// }
+		// else{
+		// 	positionZozor.x = j.getX();
+		// 	positionZozor.y = j.getY();
+		// 	j.setY(b);
+		// }
 	
 
 		j.setX(a);
-		j.setImp(10);
-		j.setV(2.5);
-		j.setP(5);
+		j.setY(b);
+		j.setV(v);
+		positionZozor.x = a;
+		positionZozor.y = b;
+		// j.setImp(10);
+		// j.setV(2.5);
+		// j.setP(5);
 		
 	}
 
@@ -83,8 +132,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 
 
 
-
-void Fond::input_handle(int &a, int &b, Joueur j, const int SOL) 
+void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sautencours) 
 {
 	SDL_Event event;	
 	
@@ -106,30 +154,33 @@ void Fond::input_handle(int &a, int &b, Joueur j, const int SOL)
                 case SDLK_RIGHT:
 
                 	cout<<"exit bye suz"<<endl;
-                	j.Deplacement(1,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(1,0,_longueurEcran,_hauteurEcran, sautencours);
                 	a = j.getX();
                 	b = j.getY();
-                	//c[0]=a;
+                	v = j.getV();
+                	
 
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-1,0,_longueurEcran,_hauteurEcran);
+                	j.Deplacement(-1,0,_longueurEcran,_hauteurEcran, sautencours);
                 	a = j.getX();
                 	b = j.getY();
-                	//c[1]=b;
+                	v = j.getV();
+                	
                 	break;
                 case SDLK_UP:
                 	j.saut();
-                	b = j.getY();
-                	a = j.getX();
+                	v = j.getV();
+                	sautencours = 1; //on commence un saut
+                	                	
                 	break;
   
-                case SDLK_DOWN:
-                cout << SOL << endl;
-						j.chute(SOL);
-                 	b = j.getY();
-						a = j.getX();
-                 	break;
+      //           case SDLK_DOWN:
+      //           cout << SOL << endl;
+						// j.chute(SOL);
+      //            	b = j.getY();
+						// a = j.getX();
+      //            	break;
                 default:
                 	break;
 

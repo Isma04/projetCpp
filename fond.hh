@@ -16,7 +16,7 @@ public:
 	//void setH(int h){_hauteurEcran = h;};
 	void init(int &h, int &lg, int &sol);
 	void anime(int x, int y, const int SOL);
-	void input_handle(int &a, int &b, Joueur j, const int SOL);
+	void input_handle(int &a, int &b,int &v, Joueur j, const int SOL, int &sautencours);
 	void tailleBMP(const std::string &file, int &h, int &lg); //pour recup h hauteur et lg longueur du perso
 
 };
