@@ -5,7 +5,7 @@
 #include <array>
 #include <vector>
 #include <iterator>
-
+#include "piece.hh"
 using namespace std;
 SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture;;
 int HAUTEUR_PERSO;
@@ -50,9 +50,7 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
 	tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
 	SOL = 390 - HAUTEUR_PERSO;
-// 	cout << HAUTEUR_PERSO << endl;
-// 	cout << LG_PERSO << endl;
-// 	cout << SOL << endl;
+
 }
 
 
@@ -62,6 +60,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
 	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+    Piece p(0,0,10);
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
@@ -71,17 +70,21 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	positionZozor.x = x;
 	positionZozor.y = y;
 
-	int max = 350;
-	int min = 15;
+	// int max = 350;
+	// int min = 15;
 
-	srand(time(NULL));
-	int r1 = (rand() % (max - min + 1)) + min;
-    int r2=  (rand() % (max - min + 1)) + min;
+	// srand(time(NULL));
+	// int r1 = (rand() % (max - min + 1)) + min;
+ //    int r2=  (rand() % (max - min + 1)) + min;
 
-	positionPiece.x = r1;
-	positionPiece.y = r2;
- 
+	// positionPiece.x = r1;
+	// positionPiece.y = r2;
+    p.RandomPos();
+    positionPiece.x = p.getX();
+    positionPiece.y = p.getY(); 
+
 	SDL_EnableKeyRepeat(10,5);
+
 	while (1) {
 
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
@@ -105,11 +108,14 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		if (check_collision(positionZozor, positionPiece) == true)
 		{
 			j.setScore(S+10);
-			r1 = (rand() % (max - min + 1)) + min;
-    	    r2=  (rand() % (max - min + 1)) + min;
-			positionPiece.x = r1;
-			positionPiece.y = r2;
+			// r1 = (rand() % (max - min + 1)) + min;
+   //  	    r2=  (rand() % (max - min + 1)) + min;
+			// positionPiece.x = r1;
+			// positionPiece.y = r2;
 
+            p.RandomPos();
+            positionPiece.x = p.getX();
+            positionPiece.y = p.getY(); 
 		}
 	}
 
@@ -133,13 +139,11 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
             {
                 case SDLK_ESCAPE:  //Appui sur la touche Echap, on arrête le programme 
                     SDL_Quit();
-                    cout<<"exit bye bye"<<endl;
                     exit(0);                
                     break;
                 case SDLK_RIGHT:
 
-                	cout<<"exit bye suz"<<endl;
-                	j.Deplacement(1,0,_longueurEcran,_hauteurEcran, sautencours);
+                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran, sautencours);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
@@ -147,7 +151,7 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
 
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-1,0,_longueurEcran,_hauteurEcran, sautencours);
+                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran, sautencours);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
@@ -157,8 +161,7 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
                 	
                 	j.saut();
                 	v = j.getV();
-                	sautencours = 1;
-                	 //on commence un saut
+                	sautencours = 1; //on commence un saut
                 	                	
                 	break;
   

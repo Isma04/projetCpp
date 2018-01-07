@@ -11,5 +11,5 @@ public:
 	int getX(){return _posX;}
 	int getY(){return _posY;}
 	void setX(int x){_posX = x;};
-	void setY(int y){_posY=y;};
+	void setY(int y){_posY = y;};
 };
