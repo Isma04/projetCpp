@@ -10,6 +10,7 @@ void Piece::RandomPos(){
 	srand(time(NULL));
 	int r1 = (rand() % (max - min + 1)) + min;
     int r2 =  (rand() % (max - min + 1)) + min;
+//verifier ici si check collision == false avant de modifier position piece
     setX(r1);
     setY(r2);
 }

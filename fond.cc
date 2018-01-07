@@ -96,7 +96,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_Flip(ecran); // On affiche réellement l'image.
 		input_handle(a, b, v, j, SOL, saut); // On appelle le gestionnaire d'évènements.
 
-		SDL_Delay(10); //attend 10ms pour rafraichir la page 
+		SDL_Delay(15); //attend 10ms pour rafraichir la page 
 	
 
 		j.setX(a);
@@ -105,7 +105,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		positionZozor.x = a;
 		positionZozor.y = b;
 		
-		if (check_collision(positionZozor, positionPiece) == true)
+		if (j.check_collision(positionZozor, positionPiece) == true)
 		{
 			j.setScore(S+10);
 			// r1 = (rand() % (max - min + 1)) + min;
@@ -116,6 +116,13 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
             p.RandomPos();
             positionPiece.x = p.getX();
             positionPiece.y = p.getY(); 
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A AJOUTER POUR QUE LA PIECE N APPARAISSE PAS DIRECT SUR LE PERSO 
+            // while (check_collision(positionZozor, positionPiece) == true){
+
+            // p.RandomPos();
+            // positionPiece.x = p.getX();
+            // positionPiece.y = p.getY(); 
+            // }
 		}
 	}
 
@@ -193,48 +200,48 @@ void Fond::tailleBMP(const std::string &file, int &h, int &lg){
 	
 }
 
-bool Fond::check_collision( SDL_Rect &A, SDL_Rect &B )
-{
-    //Les cotes des rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
+// bool Fond::check_collision( SDL_Rect &A, SDL_Rect &B )
+// {
+//     //Les cotes des rectangles
+//     int leftA, leftB;
+//     int rightA, rightB;
+//     int topA, topB;
+//     int bottomA, bottomB;
  
-    //Calcul les cotes du rectangle A
-    leftA = A.x;
-    rightA = A.x + A.w;
-    topA = A.y;
-    bottomA = A.y + A.h;
+//     //Calcul les cotes du rectangle A
+//     leftA = A.x;
+//     rightA = A.x + A.w;
+//     topA = A.y;
+//     bottomA = A.y + A.h;
  
-    //Calcul les cotes du rectangle B
-    leftB = B.x;
-    rightB = B.x + B.w;
-    topB = B.y;
-    bottomB = B.y + B.h;
-        //Tests de collision
-    if( bottomA <= topB )
-    {
-        return false;
-    }
+//     //Calcul les cotes du rectangle B
+//     leftB = B.x;
+//     rightB = B.x + B.w;
+//     topB = B.y;
+//     bottomB = B.y + B.h;
+//         //Tests de collision
+//     if( bottomA <= topB )
+//     {
+//         return false;
+//     }
  
-    if( topA >= bottomB )
-    {
-        return false;
-    }
+//     if( topA >= bottomB )
+//     {
+//         return false;
+//     }
  
-    if( rightA <= leftB )
-    {
-        return false;
-    }
+//     if( rightA <= leftB )
+//     {
+//         return false;
+//     }
  
-    if( leftA >= rightB )
-    {
-        return false;
-    }
+//     if( leftA >= rightB )
+//     {
+//         return false;
+//     }
  
-    //Si conditions collision detectee
-    return true;
-}
+//     //Si conditions collision detectee
+//     return true;
+// }
 
 
