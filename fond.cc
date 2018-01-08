@@ -46,7 +46,7 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	ecriture=SDL_LoadBMP("image/font.bmp"); //score
 	zozor = SDL_LoadBMP("image/goku1.bmp");
 	petitepiece = SDL_LoadBMP("image/pieceMini.bmp");
-	wall = SDL_LoadBMP("image/mur.bmp");
+	wall = SDL_LoadBMP("image/wall.bmp");
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
 	SDL_SetColorKey(wall, SDL_SRCCOLORKEY, SDL_MapRGB(wall->format, 255, 255, 255));
@@ -59,11 +59,11 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	SDL_Rect positionFond, positionZozor, positionPiece, positionMur;
+	SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
 	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
    Piece p(0,0,10);
-	Mur M(0,0,12);
+	Mur M(50,50,12);
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
@@ -71,7 +71,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	positionFond.y = 0;
 	
 	M.RandomPos();
-
+cout << M._Mur.size() << endl;
 	positionZozor.x = x;
 	positionZozor.y = y;
 
@@ -85,6 +85,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	// positionPiece.x = r1;
 	// positionPiece.y = r2;
     p.RandomPos();
+
     positionPiece.x = p.getX();
     positionPiece.y = p.getY(); 
 
@@ -95,9 +96,15 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
-		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
-
+		//SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
 		
+			SDL_BlitSurface(wall, NULL, ecran, *it);
+		}
+		
+
+
+
 
 		int S=j.getScore();
 		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);

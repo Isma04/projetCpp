@@ -3,16 +3,22 @@
 
 
 void Mur::RandomPos(){
-	// int max=350;
-	// int min=15;
+	int max=350;
+	int min=15;
+	SDL_Rect* posMur;
+	srand(time(NULL));
 	for(int i=0;i<_NbMurMax;i++)
 	{
-		// srand(time(NULL));
-		// int x = (rand() % (max - min + 1)) + min;
-  //   	int y =  (rand() % (max - min + 1)) + min;
-		int x=i;
-		int y = i+1;
-		_Mur.push_back(make_pair(x,y));
+		
+		int x = (rand() % (max - min + 1)) + min;
+     	int y =  (rand() % (max - min + 1)) + min;
+		
+		posMur->x = x;
+		posMur->y = y;
+		cout << x << endl;
+		cout << y << endl;
+		_Mur.push_front(posMur);
+
 		//matr.at(x).push_back(y); 
 	//matr.at(x).at(y) = 2;
 	}	

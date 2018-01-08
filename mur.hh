@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include "objet.hh"
+#include <SDL/SDL.h>
 using namespace std;
 
 class Mur: public Objet{
@@ -13,8 +14,9 @@ protected:
 	int _largeur;
 	int _NbMurMax;
 public:
-	list<pair<int,int>> _Mur;
+	list<SDL_Rect*> _Mur;
 	Mur(int x, int y, int nb):Objet(x,y), _NbMurMax(nb){};
+	int getNb(){return _NbMurMax;}
 	void RandomPos();
 	
 };
