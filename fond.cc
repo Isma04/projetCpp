@@ -1,4 +1,5 @@
 #include "fond.hh"
+#include "mur.hh"
 //#include <string>
 #include <iostream>
 #include <fstream>
@@ -7,7 +8,7 @@
 #include <iterator>
 #include "piece.hh"
 using namespace std;
-SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture;;
+SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture, *wall;
 int HAUTEUR_PERSO;
 int LG_PERSO;
 // int SOL;
@@ -45,9 +46,10 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	ecriture=SDL_LoadBMP("image/font.bmp"); //score
 	zozor = SDL_LoadBMP("image/goku1.bmp");
 	petitepiece = SDL_LoadBMP("image/pieceMini.bmp");
-
+	wall = SDL_LoadBMP("image/mur.bmp");
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
+	SDL_SetColorKey(wall, SDL_SRCCOLORKEY, SDL_MapRGB(wall->format, 255, 255, 255));
 	tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
 	SOL = 390 - HAUTEUR_PERSO;
 
@@ -57,15 +59,18 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	SDL_Rect positionFond, positionZozor, positionPiece;
+	SDL_Rect positionFond, positionZozor, positionPiece, positionMur;
 	int v = 0;
 	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
-    Piece p(0,0,10);
+   Piece p(0,0,10);
+	Mur M(0,0);
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
 	positionFond.x = 0;
 	positionFond.y = 0;
+	
+	M.RandomPos();
 
 	positionZozor.x = x;
 	positionZozor.y = y;
@@ -90,6 +95,10 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
+		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+
+		
+
 		int S=j.getScore();
 		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);
 

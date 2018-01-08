@@ -7,5 +7,6 @@ class Objet: public Elem{
 
 public:
 	Objet(int x, int y):Elem(x,y){};
-	//virtual void RandomPos();
+	virtual void RandomPos();
+	
 };
