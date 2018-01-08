@@ -63,7 +63,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	int v = 0;
 	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
    Piece p(0,0,10);
-	Mur M(0,0);
+	Mur M(0,0,12);
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
