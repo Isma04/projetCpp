@@ -98,7 +98,7 @@ cout << M._Mur.size() << endl;
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
 		//SDL_BlitSurface(wall, NULL, ecran, &positionMur);
 		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
-		
+			//cout << *it << endl;
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
@@ -150,8 +150,8 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
 {
 	SDL_Event event;	
 	
-	while (SDL_PollEvent(&event)) {
-
+	//while (SDL_PollEvent(&event)) {
+		SDL_PollEvent(&event);
 		switch (event.type) {
 		case SDL_QUIT:
 			SDL_Quit();
@@ -189,14 +189,22 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
                 	break;
   
                 default:
+                	j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours);
+                	a = j.getX();
+                	b = j.getY();
+                	v = j.getV();
                 	break;
             }
             break;
         default:
+        j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours);
+                	a = j.getX();
+                	b = j.getY();
+                	v = j.getV();
         	break;    
-		}
-		      
-	}
+		}  
+
+	//}
 
 
 }
