@@ -15,7 +15,7 @@ protected:
 	int _NbMurMax;
 public:
 	list<SDL_Rect*> _Mur;
-	Mur(int x, int y, int nb):Objet(x,y), _NbMurMax(nb){};
+	Mur(int x, int y, const std::string &file, int nb):Objet(x,y, file), _NbMurMax(nb){};
 	int getNb(){return _NbMurMax;}
 	void RandomPos();
 	

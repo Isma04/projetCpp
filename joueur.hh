@@ -11,7 +11,7 @@ protected:
 	float _poids;
 public:
 	//constructeur
-	Joueur(int x, int y, std::string name, int v, int impulse, float p):Personnage(x,y,name), _score(0), _impulsion(impulse), _vitesse(v), _poids(p){};      	
+	Joueur(int x, int y, const std::string &file, std::string name, int v, int impulse, float p):Personnage(x,y,file, name), _score(0), _impulsion(impulse), _vitesse(v), _poids(p){};      	
 	//getteurs
 	int getImp(){return _impulsion;}
 	int getV(){return _vitesse;}

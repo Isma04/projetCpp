@@ -6,7 +6,7 @@
 class Objet: public Elem{
 
 public:
-	Objet(int x, int y):Elem(x,y){};
+	Objet(int x, int y, const std::string &file):Elem(x,y, file){};
 	virtual void RandomPos() = 0;
 	
 };

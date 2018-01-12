@@ -38,7 +38,7 @@ void PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,.
 }
 
 
-void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
+void Fond::init(){//int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
@@ -50,41 +50,34 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
 	SDL_SetColorKey(wall, SDL_SRCCOLORKEY, SDL_MapRGB(wall->format, 255, 255, 255));
-	tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
-	SOL = 390 - HAUTEUR_PERSO;
-
+	// tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
+	// SOL = 390 - HAUTEUR_PERSO;
+	// cout << "hauteir " <<HAUTEUR_PERSO << endl;
 }
 
 
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	cout << "hauteir " <<HAUTEUR_PERSO << endl;
-		SDL_Rect positionFond, positionZozor, positionPiece;
+	//cout << "hauteir " <<HAUTEUR_PERSO << endl;
+	SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
-	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
-   Piece p(0,0,10);
-	Mur M(50,50,12);
+
+	Joueur j(x,y,"image/goku1.bmp","zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+	Piece p(0,0,"image/pieceMini.bmp",10);	
+	Mur M(50,50,"image/wall.bmp",12);
+
 	int a = x;
 	int b = y;
 	int saut = 0; //on est au sol
 	positionFond.x = 0;
 	positionFond.y = 0;
-	
+
 	M.RandomPos();
 
 	positionZozor.x = x;
 	positionZozor.y = y;
 
-	// int max = 350;
-	// int min = 15;
-
-	// srand(time(NULL));
-	// int r1 = (rand() % (max - min + 1)) + min;
- //    int r2=  (rand() % (max - min + 1)) + min;
-
-	// positionPiece.x = r1;
-	// positionPiece.y = r2;
     p.RandomPos();
 
     positionPiece.x = p.getX();
@@ -97,9 +90,9 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
-		//SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+
 		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
-			//cout << *it << endl;
+
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
@@ -125,11 +118,6 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		if (j.check_collision(positionZozor, positionPiece) == true)
 		{
 			j.setScore(S+10);
-			// r1 = (rand() % (max - min + 1)) + min;
-   //  	    r2=  (rand() % (max - min + 1)) + min;
-			// positionPiece.x = r1;
-			// positionPiece.y = r2;
-
             p.RandomPos();
             positionPiece.x = p.getX();
             positionPiece.y = p.getY(); 
@@ -210,63 +198,7 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
 
 }
 
-void Fond::tailleBMP(const std::string &file, int &h, int &lg){
 
-	static constexpr size_t HEADER_SIZE = 54;
 
-    std::ifstream bmp(file, std::ios::binary);
-
-    std::array<char, HEADER_SIZE> header;
-    bmp.read(header.data(), header.size());
-
-    lg = *reinterpret_cast<uint32_t *>(&header[18]);
-    h = *reinterpret_cast<uint32_t *>(&header[22]);
-
-	
-}
-
-// bool Fond::check_collision( SDL_Rect &A, SDL_Rect &B )
-// {
-//     //Les cotes des rectangles
-//     int leftA, leftB;
-//     int rightA, rightB;
-//     int topA, topB;
-//     int bottomA, bottomB;
- 
-//     //Calcul les cotes du rectangle A
-//     leftA = A.x;
-//     rightA = A.x + A.w;
-//     topA = A.y;
-//     bottomA = A.y + A.h;
- 
-//     //Calcul les cotes du rectangle B
-//     leftB = B.x;
-//     rightB = B.x + B.w;
-//     topB = B.y;
-//     bottomB = B.y + B.h;
-//         //Tests de collision
-//     if( bottomA <= topB )
-//     {
-//         return false;
-//     }
- 
-//     if( topA >= bottomB )
-//     {
-//         return false;
-//     }
- 
-//     if( rightA <= leftB )
-//     {
-//         return false;
-//     }
- 
-//     if( leftA >= rightB )
-//     {
-//         return false;
-//     }
- 
-//     //Si conditions collision detectee
-//     return true;
-// }
 
 
