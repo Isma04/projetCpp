@@ -59,7 +59,8 @@ void Fond::init(int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	SDL_Rect positionFond, positionZozor, positionPiece;
+	cout << "hauteir " <<HAUTEUR_PERSO << endl;
+		SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
 	Joueur j(x,y,"zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
    Piece p(0,0,10);
@@ -71,7 +72,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	positionFond.y = 0;
 	
 	M.RandomPos();
-cout << M._Mur.size() << endl;
+
 	positionZozor.x = x;
 	positionZozor.y = y;
 
