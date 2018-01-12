@@ -96,17 +96,13 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
-
-
-
-
 		int S=j.getScore();
 		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);
 
 		SDL_Flip(ecran); // On affiche réellement l'image.
-		input_handle(a, b, v, j, SOL, saut); // On appelle le gestionnaire d'évènements.
+		input_handle(a, b, v, j, saut); // On appelle le gestionnaire d'évènements.
 
-		SDL_Delay(15); //attend 10ms pour rafraichir la page 
+		SDL_Delay(10); //attend 10ms pour rafraichir la page 
 	
 
 		j.setX(a);
@@ -135,7 +131,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 
 
 
-void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sautencours) 
+void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours) 
 {
 	SDL_Event event;	
 	
@@ -170,10 +166,10 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, const int SOL, int &sa
                 	
                 	break;
                 case SDLK_UP:
-                	
+                	if (sautencours==0){
                 	j.saut();
                 	v = j.getV();
-                	sautencours = 1; //on commence un saut
+                	sautencours = 1;} //on commence un saut
                 	                	
                 	break;
   

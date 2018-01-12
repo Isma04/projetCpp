@@ -9,16 +9,16 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
         _posX += valeur_deplacementX;
     }
 
-    if (_posY - _vitesse <= 290 && (_vitesse != 0 || (_vitesse == 0 && sautencours == 1))) {  //pas au sol et vitesse non nul
+    if (_posY - _vitesse <= 390-_h && (_vitesse != 0 || (_vitesse == 0 && sautencours == 1))) {  //pas au sol et vitesse non nul
     
         if (_posY - _vitesse >= 0) _posY -= _vitesse; //la position selon Y est modifiée si le perso reste dans l écran (donc y>0)
         else _vitesse *= -1; //s'il touche le plafond, la vitesse devient negative et il redescend directement 
         _vitesse -= _poids;
-        if (_vitesse == 0) sautencours = 1;
+        //if (_vitesse == 0 ) sautencours = 1;
         
     } 
 
-    else {} //si on est au sol et que la vitesse de deplacement est nul on ne se deplace pas selon y 
+    else {sautencours=0;} //si on est au sol et que la vitesse de deplacement est nul on ne se deplace pas selon y 
 
       
 }
