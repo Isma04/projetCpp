@@ -8,12 +8,8 @@
 using namespace std; 
 int main(void)
 {
-	// int HAUTEUR_PERSO;
-	// int LG_PERSO;
-	// int SOL;
-
 	Fond f(690,390);
-	f.init();//LG_PERSO, HAUTEUR_PERSO, SOL);
+	f.init();
 	f.anime(0,290, 290);
 
 
