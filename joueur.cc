@@ -60,7 +60,8 @@ int Joueur::toucheMur(Mur M){
 
         if ((_posY+_h - yMur < 10 && _posY+_h - yMur > -10 ) && _posX > xMur-_lg && _posX < xMur + M.getLg() - 30 ) return 1; //sur le mur 
         else if (-_posX - _lg + xMur < 5 && -_posX - _lg+ xMur > -5 && _posY > yMur - _h +10 && _posY < yMur -10 + M.getH()) return 2;     
-     	else if((_posX - xMur - M.getLg() < 5 && _posX - xMur - M.getLg() > -5) && _posY > yMur - _h +10 && _posY < yMur -10 + M.getH()) return 3;
+     	// else if((_posX - xMur - M.getLg() < 5 && _posX - xMur - M.getLg() > -5) && _posY > yMur - _h +10 && _posY < yMur -10 + M.getH()) return 3;
+     	else if((_posX > xMur-_lg && _posX < xMur + M.getLg()) && _posY > yMur - _h +10 && _posY < yMur -10 + M.getH()) return 3;
      	else if (_posY - yMur - M.getH() < 10 && _posY - yMur - M.getH() > -10 && _posX > xMur-_lg && _posX < xMur + M.getLg()) return 4;
 	} 
 
