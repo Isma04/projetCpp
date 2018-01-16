@@ -23,9 +23,9 @@ public:
 	void setP(int x){_poids = x;}
 	void setScore(int x){_score = x;}
 	//fonctions
-	void Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur, int &sautencours); //pour savoir si on est en train de sauter, 1 si oui 0 sinon cad si on est au sol
+	void Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur, int &sautencours, Mur M); //pour savoir si on est en train de sauter, 1 si oui 0 sinon cad si on est au sol
 	void saut();
-	bool touche(Mur M);
+	int toucheMur(Mur M);
 	// bool touche(Elem elt);
 	
 

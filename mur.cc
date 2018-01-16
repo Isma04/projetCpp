@@ -19,7 +19,9 @@ void Mur::RandomPos(){
 		_Mur.push_back(posMur);
 		x = x + ecartX;
 		y =  (rand() % (max - min + 1)) + min;	
+
 	}	
+	
 }
 
 

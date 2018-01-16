@@ -63,7 +63,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	SDL_Rect positionFond, positionZozor, positionPiece;
 	int v = 0;
 
-	Joueur j(x,y,"image/goku1.bmp","zoro", v, 18, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+	Joueur j(x,y,"image/goku1.bmp","zoro", v, 15, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
 	Piece p(0,0,"image/pieceMini.bmp",10);	
 	Mur M(50,50,"image/wall.bmp",12);
 
@@ -92,7 +92,6 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
 
 		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
-
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
@@ -100,7 +99,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);
 
 		SDL_Flip(ecran); // On affiche réellement l'image.
-		input_handle(a, b, v, j, saut); // On appelle le gestionnaire d'évènements.
+		input_handle(a, b, v, j, saut, M); // On appelle le gestionnaire d'évènements.
 
 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
 	
@@ -131,7 +130,7 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 
 
 
-void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours) 
+void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours, Mur M) 
 {
 	SDL_Event event;	
 	
@@ -151,7 +150,7 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours)
                     break;
                 case SDLK_RIGHT:
 
-                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran, sautencours);
+                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran, sautencours, M);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
@@ -159,22 +158,23 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours)
 
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran, sautencours);
+                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran, sautencours, M);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
                 	
                 	break;
                 case SDLK_UP:
-                	if (sautencours==0){
+                	if (sautencours!=1){
                 	j.saut();
                 	v = j.getV();
-                	sautencours = 1;} //on commence un saut
+                    if (sautencours == 0) sautencours = 1;
+                    else if (sautencours==2) sautencours = 3;} //on commence un saut
                 	                	
                 	break;
   
                 default:
-                	j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours);
+                	j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
@@ -182,7 +182,7 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours)
             }
             break;
         default:
-        j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours);
+        j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();

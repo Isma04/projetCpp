@@ -16,7 +16,7 @@ public:
 	//void setH(int h){_hauteurEcran = h;};
 	void init();//int &h, int &lg, int &sol);
 	void anime(int x, int y, const int SOL);
-	void input_handle(int &a, int &b,int &v, Joueur j, int &sautencours);
+	void input_handle(int &a, int &b,int &v, Joueur j, int &sautencours, Mur M);
 
 	//bool check_collision( SDL_Rect &A, SDL_Rect &B ); //renvoie true si A et B sont en collision, false sinon
 
