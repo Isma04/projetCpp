@@ -5,8 +5,11 @@
 #include <fstream>
 #include <array>
 #include <vector>
+#include <string>
 #include <iterator>
+#include "niveau.hh"
 #include "piece.hh"
+using namespace std;
 using namespace std;
 SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture, *wall;
 int HAUTEUR_PERSO;
@@ -37,6 +40,22 @@ void PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,.
     }
 }
 
+/*
+
+void inventaire(SDL_Surface *ecran) //fonction qui gère l'inventaire
+{
+SDL_Surface *inv = NULL; // varaible de la surface inventaire
+SDL_Rect positioni; // variable position de l'inventaire
+
+inv = SDL_LoadBMP("inventaire.bmp"); //chargement de l'inventaire
+positioni.x=1ima0;
+positioni.y=10;
+SDL_BlitSurface(inv, NULL, ecran, &positioni); // Collage de la surface inventaire sur l'écran
+
+SDL_Flip(ecran); // mettre à jour l'affichage
+
+} 
+*/
 
 void Fond::init(){//int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 	
@@ -59,8 +78,22 @@ void Fond::init(){//int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
 
 void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 {
-	//cout << "hauteir " <<HAUTEUR_PERSO << endl;
-	SDL_Rect positionFond, positionZozor, positionPiece;
+	// On cree un vector qui stocke tous les fonds 
+    vector<string> tableau;
+    tableau.push_back("image/euro.bmp");
+    tableau.push_back("image/palaos.bmp");	
+    Niveau N(1);  // Je crée mon niveau
+    // J'initialise ma map qui contient pour chaque niveau le score 	    demandé 
+    map<int,int> MesNiveaux=N.Init();
+    // J'initialise un iterator qui va parcourir ma map 
+    map<int, int>::iterator it2=MesNiveaux.begin();
+    // Je crée 2 variables Id_niveau et Score 
+    int Id_niveau=it2->first;
+    int Score_max=it2->second;
+
+
+
+	SDL_Rect positionFond, positionZozor, positionPiece, positionMur;
 	int v = 0;
 
 	Joueur j(x,y,"image/goku1.bmp","zoro", v, 15, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
@@ -73,15 +106,19 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 	positionFond.x = 0;
 	positionFond.y = 0;
 
-	M.RandomPos();
+		M.Charge(1);
 
 	positionZozor.x = x;
 	positionZozor.y = y;
 
-    p.RandomPos();
+     p.Charge(1);
 
-    positionPiece.x = p.getX();
-    positionPiece.y = p.getY(); 
+
+    SDL_Rect* Piece_courante;
+    Piece_courante = p._Pieces.front();
+    p._Pieces.pop_front();
+    positionPiece.x =  Piece_courante->x;
+    positionPiece.y = Piece_courante->y; 
 
 	SDL_EnableKeyRepeat(10,5);
 
@@ -90,13 +127,14 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
+		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
 
 		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
 		int S=j.getScore();
-		PrintSDL(ecriture,ecran,500,20,"Score : %d ", S);
+		PrintSDL(ecriture,ecran,100,20,"Niveau: %d \n Score : %d / %d ", Id_niveau, S, Score_max);
 
 		SDL_Flip(ecran); // On affiche réellement l'image.
 		input_handle(a, b, v, j, saut, M); // On appelle le gestionnaire d'évènements.
@@ -109,21 +147,43 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
 		j.setV(v);
 		positionZozor.x = a;
 		positionZozor.y = b;
+
+// Si le perso attrape une piece
 		
 		if (j.check_collision(positionZozor, positionPiece) == true)
 		{
-			j.setScore(S+10);
-            p.RandomPos();
-            positionPiece.x = p.getX();
-            positionPiece.y = p.getY(); 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! A AJOUTER POUR QUE LA PIECE N APPARAISSE PAS DIRECT SUR LE PERSO 
-            // while (check_collision(positionZozor, positionPiece) == true){
-
-            // p.RandomPos();
-            // positionPiece.x = p.getX();
-            // positionPiece.y = p.getY(); 
-            // }
+	j.setScore(S+10);
+            Piece_courante = p._Pieces.front();
+            p._Pieces.pop_front();
+            positionPiece.x =  Piece_courante->x;
+            positionPiece.y = Piece_courante->y; 
 		}
+
+// Passage à un nouveau niveau
+
+ if (j.getScore() >= Score_max)
+        {
+		//inventaire(ecran)
+        it2++; // ON avance dans la map pour le score et l'identifiant du niveau 
+        //it1++; // on avance dans le tableau des fonds 
+        Id_niveau=it2->first;
+        cout << " identifiant niveau " << endl;
+        cout << Id_niveau << endl;
+        Score_max=it2->second;
+        j.setScore(0);
+        imageDeFond=SDL_LoadBMP(tableau[Id_niveau-2].c_str()); // car le niveau 
+        SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
+        M.Charge(Id_niveau);
+        p.Charge(Id_niveau);
+		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+
+
+
+
+
+
+        } 
+        
 	}
 
 }

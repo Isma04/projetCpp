@@ -1,27 +1,38 @@
 #include "mur.hh"
 #include <time.h>
+#include <fstream>
 
 
-void Mur::RandomPos(){
-	int max=350;
-	int min=15;
-	SDL_Rect* posMur;
-	srand(time(NULL));
-	
-	int x = (rand() % (100 - 0 + 1)) + 0;
-  	int y =  (rand() % (190 - 0 + 1)) + 0;
-    int ecartX = 100;
-	for(int i=0;i<_NbMurMax-1;i++)
-	{
-		posMur = new SDL_Rect; //pour ne pas ecraser les donnees pointees pas le pointeur
-		posMur->x = x;
-		posMur->y = y;
-		_Mur.push_back(posMur);
-		x = x + ecartX;
-		y =  (rand() % (max - min + 1)) + min;	
 
-	}	
-	
+void Mur::Charge(int niveau)// je met en param l'id de mon niveau
+{
+
+string nom = "mur_niveau_" + to_string(niveau);
+ifstream fichier(nom, ios::in);  // on ouvre le fichier en lecture
+if(fichier)  // si l'ouverture a réussi
+
+   {       
+   	SDL_Rect* posMur;
+
+    int nb_mur, posX, posY;
+    fichier >> nb_mur;
+    for(int i=0;i< nb_mur; i++)
+    {
+    	posMur= new SDL_Rect;
+    	fichier >> posX >> posY;
+    	posMur->x = posX;
+    	posMur->y=posY;
+    	_Mur.push_back(posMur);
+    }
+
+
+    fichier.close();  // on ferme le fichier
+
+    }
+
+       
 }
+
+
 
 

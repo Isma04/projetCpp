@@ -2,14 +2,31 @@
 #include <string>
 #include "piece.hh"
 
-void Piece::RandomPos(){
-	int max = 350;
-	int min = 15;
 
-	srand(time(NULL));
-	int r1 = (rand() % (max - min + 1)) + min;
-   int r2 =  (rand() % (max - min + 1)) + min;
-//verifier ici si check collision == false avant de modifier position piece
-   setX(r1);
-   setY(r2);
+void Piece::Charge(int niveau){
+string nom = "piece_niveau_" + to_string(niveau);
+ifstream fichier(nom, ios::in);  // on ouvre le fichier en lecture
+if(fichier)  // si l'ouverture a réussi
+
+   {       
+   	SDL_Rect* posPiece;
+
+    int nb_piece, posX, posY;
+    fichier >> nb_piece;
+    for(int i=0;i< nb_piece; i++)
+    {
+    	posPiece= new SDL_Rect;
+    	fichier >> posX >> posY;
+    	posPiece->x = posX;
+    	posPiece->y=posY;
+    	_Pieces.push_back(posPiece);
+    }
+
+
+    fichier.close();  // on ferme le fichier
+
+    }
+
+
+
 }
