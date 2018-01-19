@@ -10,10 +10,10 @@ using namespace std;
 
 class Niveau{
 private:
-	int _id;
+	int _id; // identifiant du niveau 
 public:
 	Niveau(int x):_id(x){};
-	map<int, int> Init();
+	map<int, int> Init(); // A chaque niveau marque par un identifiant on associe le score max à atteindre 
 
 
 

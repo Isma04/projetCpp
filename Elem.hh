@@ -30,5 +30,4 @@ public:
 	int getLg(){return _lg;}
 	void operator()(int x, int y); //setteur
 	bool check_collision( SDL_Rect &A, SDL_Rect &B ); //pour savoir si deux elem se touchent 
-	//void tailleBMP(const std::string &file, int &h, int &lg); //pour recup h hauteur et lg longueur du perso
 };

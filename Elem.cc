@@ -48,17 +48,4 @@ bool Elem::check_collision( SDL_Rect &A, SDL_Rect &B){
     return true;
 }
 
-// void Fond::tailleBMP(const std::string &file, int &h, int &lg){
 
-// 	static constexpr size_t HEADER_SIZE = 54;
-
-//     std::ifstream bmp(file, std::ios::binary);
-
-//     std::array<char, HEADER_SIZE> header;
-//     bmp.read(header.data(), header.size());
-
-//     lg = *reinterpret_cast<uint32_t *>(&header[18]);
-//     h = *reinterpret_cast<uint32_t *>(&header[22]);
-
-	
-// }

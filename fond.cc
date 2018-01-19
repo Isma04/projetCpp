@@ -6,7 +6,6 @@
 #include "gameover.hh"
 #include <iostream>
 #include <fstream>
-// #include <vector>
 #include <string>
 #include <iterator>
 
@@ -15,7 +14,8 @@ SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture, *wall, *messa
 SDL_Color textColor = { 255, 255, 255 };
 
 
-//Pour afficher le score
+//Fonction permettant d'afficher une ecriture sur le fond. 
+// Notemment pour afficher le score, l'identifiant du niveau et le timer
 void Fond::PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,...){ 
     char buf[500];
     int i,len;
@@ -36,13 +36,14 @@ void Fond::PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* 
     }
 }
 
+
 void Fond::init(){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
 	imageDeFond = SDL_LoadBMP("image/bahamas.bmp");
 	ecriture=SDL_LoadBMP("image/font.bmp"); //score
-    SDL_SetColorKey(ecriture, SDL_SRCCOLORKEY, SDL_MapRGB(ecriture->format, 0, 0, 0)); 
+    SDL_SetColorKey(ecriture, SDL_SRCCOLORKEY, SDL_MapRGB(ecriture->format, 255, 0, 255)); 
 	zozor = SDL_LoadBMP("image/goku1.bmp");
 	petitepiece = SDL_LoadBMP("image/pieceMini.bmp");
 	wall = SDL_LoadBMP("image/wall.bmp");
@@ -97,7 +98,7 @@ void Fond::anime(int x, int y, const int SOL, vector<string> &tableau) //positio
 	SDL_EnableKeyRepeat(10,5);
 
     int droite = 1;
-    InitRect(positionDebut, 60, 30);
+    InitRect(positionDebut, 0, 0);
     SDL_BlitSurface(imageDeDebut, NULL, ecran, &positionDebut);
     SDL_Flip(ecran);
     SDL_Delay(10000);
@@ -116,7 +117,7 @@ void Fond::anime(int x, int y, const int SOL, vector<string> &tableau) //positio
 		}
 		
 		int S=j.getScore();
-        PrintSDL(ecriture,ecran,10,20,"Niveau:%d\n Score:%d/%d, Timer: %d sec", Id_niveau, S, Score_max, (myTimer.get_ticks()/(1000)));
+        PrintSDL(ecriture,ecran,10,20,"Niveau:%d\n Score:%d/%d, Timer: %d/60 sec ", Id_niveau, S, Score_max, (myTimer.get_ticks()/(1000))-10);
 
 		SDL_Flip(ecran); // On affiche réellement l'image.
 		input_handle(a, b, v, j, saut, M, C); // On appelle le gestionnaire d'évènements.
@@ -231,7 +232,7 @@ void Fond::FreeS(SDL_Surface* &cop, SDL_Surface* &wall, SDL_Surface* &petitepiec
 
 
 void Fond::ReInitPiece(SDL_Rect* &Piece_courante, Piece &p, SDL_Rect &positionPiece){
-
+// Car on souhaite que les piéces apparaissent une aprés l'autre 
     Piece_courante = p._Pieces.front();
     p._Pieces.pop_front();
     positionPiece.x =  Piece_courante->x;
