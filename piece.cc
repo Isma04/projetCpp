@@ -4,6 +4,7 @@
 
 
 void Piece::Charge(int niveau){
+
 string nom = "piece_niveau_" + to_string(niveau);
 ifstream fichier(nom, ios::in);  // on ouvre le fichier en lecture
 if(fichier)  // si l'ouverture a réussi
@@ -26,7 +27,6 @@ if(fichier)  // si l'ouverture a réussi
     fichier.close();  // on ferme le fichier
 
     }
-
 
 
 }

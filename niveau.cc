@@ -17,7 +17,7 @@ map<int,int> Niveau::Init()
 
  for( int i=1; i< _Nb; i++)
  {
-  max=max+30;
+  max=max+20;
   Niveaux[i]=max;
  }
 return Niveaux;

@@ -3,11 +3,13 @@
 #include <iostream>
 using namespace std;
 
-void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur, int &sautencours, Mur M){
+void Joueur::operator[](int s){
+    _score = s;
+}
+
+void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int longueur, int hauteur, int &sautencours, Mur M, Policier C){
     int val = toucheMur(M);
-    cout << "val " << val << endl;
-    cout << "vitesse " << _vitesse << endl;
-    cout << "saut en cours " << sautencours << endl;
+
  	//deplacement en X
     if (valeur_deplacementX != 0 && _posX + valeur_deplacementX <= longueur && _posX + valeur_deplacementX >= 0){ 
         if ((val != 2 && valeur_deplacementX >0) || (val != 3 && valeur_deplacementX < 0) || val == 0 ) _posX += valeur_deplacementX;
@@ -20,10 +22,13 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
     		sautencours = 2;
     	}
     	else if (val==4 && sautencours == 1) {
-    		cout << "4   " << _vitesse << endl;
+    		
+            while(_posY < 390-_h){
     		_vitesse*=-1;
     		_vitesse -= _poids;
     		_posY -= _vitesse;}
+            sautencours = 0;
+            _vitesse = 0;}
 
     	else {
        		if (_posY - _vitesse >= 0) _posY -= _vitesse; //la position selon Y est modifiée si le perso reste dans l écran (donc y>0)
@@ -38,6 +43,7 @@ void Joueur::Deplacement(int valeur_deplacementX, int valeur_deplacementY, int l
 
 void Joueur::saut(){
     setV(getImp());
+
 }
 
 /* Fonction pour savoir si le joueur touche un mur

@@ -27,12 +27,12 @@ if(fichier)  // si l'ouverture a réussi
 
 
     fichier.close();  // on ferme le fichier
+    
 
     }
 
        
 }
-
 
 
 

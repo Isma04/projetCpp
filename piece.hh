@@ -15,3 +15,4 @@ public:
 	Piece(int x, int y, const std::string &file, int valeur): Objet(x,y, file),_valeur(valeur){};
 	void Charge(int);
 };
+

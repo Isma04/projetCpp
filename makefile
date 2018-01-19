@@ -3,7 +3,7 @@ CCFLAGS= -Wall -Werror -std=c++11
 LDFLAGS= -lSDL
 SRC= $(wildcard *.cc)
 OBJ= $(SRC:.cc=.o)
-EXEC= flow 
+EXEC= jeuPP 
 
 
 

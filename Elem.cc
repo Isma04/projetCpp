@@ -1,5 +1,10 @@
 #include "Elem.hh"
 
+void Elem::operator()(int x, int y){
+	_posX = x;
+	_posY = y;
+}
+
 bool Elem::check_collision( SDL_Rect &A, SDL_Rect &B){
     //Les cotes des rectangles
     int leftA, leftB;

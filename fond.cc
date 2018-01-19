@@ -1,24 +1,22 @@
 #include "fond.hh"
 #include "mur.hh"
-//#include <string>
-#include <iostream>
-#include <fstream>
-#include <array>
-#include <vector>
-#include <string>
-#include <iterator>
 #include "niveau.hh"
 #include "piece.hh"
+#include "time.hh"
+#include "gameover.hh"
+#include <iostream>
+#include <fstream>
+// #include <vector>
+#include <string>
+#include <iterator>
+
 using namespace std;
-using namespace std;
-SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture, *wall;
-int HAUTEUR_PERSO;
-int LG_PERSO;
-// int SOL;
+SDL_Surface *ecran, *imageDeFond, *zozor, *petitepiece, *ecriture, *wall, *message, *cop, *gameover, *imageDeDebut;
+SDL_Color textColor = { 255, 255, 255 };
+
 
 //Pour afficher le score
-void PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,...)
-{ // l'image doit faire 16 * 14 caractères.
+void Fond::PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,...){ 
     char buf[500];
     int i,len;
     SDL_Rect Rsrc,Rdst;
@@ -31,59 +29,40 @@ void PrintSDL(SDL_Surface* font,SDL_Surface* dest,int x,int y,const char* text,.
     len = (int)strlen(buf);
     for(i=0;i<len;i++)
     {
-        Rsrc.x = Rsrc.w*((unsigned char)(buf[i])%16);
-        Rsrc.y = Rsrc.h*((unsigned char)(buf[i])/16-2);  // on saute les 31 premiers codes ASCII
-        Rdst.x = x;
-        Rdst.y = y;
+        InitRect(Rsrc, Rsrc.w*((unsigned char)(buf[i])%16), Rsrc.h*((unsigned char)(buf[i])/16-2));
+        InitRect(Rdst, x, y);
         SDL_BlitSurface(font,&Rsrc,dest,&Rdst);
         x+=Rsrc.w;
     }
 }
 
-/*
-
-void inventaire(SDL_Surface *ecran) //fonction qui gère l'inventaire
-{
-SDL_Surface *inv = NULL; // varaible de la surface inventaire
-SDL_Rect positioni; // variable position de l'inventaire
-
-inv = SDL_LoadBMP("inventaire.bmp"); //chargement de l'inventaire
-positioni.x=1ima0;
-positioni.y=10;
-SDL_BlitSurface(inv, NULL, ecran, &positioni); // Collage de la surface inventaire sur l'écran
-
-SDL_Flip(ecran); // mettre à jour l'affichage
-
-} 
-*/
-
-void Fond::init(){//int &HAUTEUR_PERSO, int &LG_PERSO, int &SOL){
+void Fond::init(){
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	ecran = SDL_SetVideoMode(_longueurEcran, _hauteurEcran, 32, SDL_HWSURFACE);
 	imageDeFond = SDL_LoadBMP("image/bahamas.bmp");
 	ecriture=SDL_LoadBMP("image/font.bmp"); //score
+    SDL_SetColorKey(ecriture, SDL_SRCCOLORKEY, SDL_MapRGB(ecriture->format, 0, 0, 0)); 
 	zozor = SDL_LoadBMP("image/goku1.bmp");
 	petitepiece = SDL_LoadBMP("image/pieceMini.bmp");
 	wall = SDL_LoadBMP("image/wall.bmp");
+    cop = SDL_LoadBMP("image/cop1.bmp");
+    gameover = SDL_LoadBMP("image/press1.bmp");
+    imageDeDebut = SDL_LoadBMP("image/ppg.bmp");
 	SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 0));
 	SDL_SetColorKey(petitepiece, SDL_SRCCOLORKEY, SDL_MapRGB(petitepiece->format, 255, 255, 255));
 	SDL_SetColorKey(wall, SDL_SRCCOLORKEY, SDL_MapRGB(wall->format, 255, 255, 255));
-	// tailleBMP("image/goku1.bmp", HAUTEUR_PERSO, LG_PERSO);
-	// SOL = 390 - HAUTEUR_PERSO;
-	// cout << "hauteir " <<HAUTEUR_PERSO << endl;
+    SDL_SetColorKey(cop, SDL_SRCCOLORKEY, SDL_MapRGB(cop->format, 255, 255, 255));
 }
 
 
 
-void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
+void Fond::anime(int x, int y, const int SOL, vector<string> &tableau) //position x,y du perso
 {
-	// On cree un vector qui stocke tous les fonds 
-    vector<string> tableau;
-    tableau.push_back("image/euro.bmp");
-    tableau.push_back("image/palaos.bmp");	
+    Timer myTimer;
+    myTimer.start();
     Niveau N(1);  // Je crée mon niveau
-    // J'initialise ma map qui contient pour chaque niveau le score 	    demandé 
+    // J'initialise ma map qui contient pour chaque niveau le score demandé 
     map<int,int> MesNiveaux=N.Init();
     // J'initialise un iterator qui va parcourir ma map 
     map<int, int>::iterator it2=MesNiveaux.begin();
@@ -91,110 +70,107 @@ void Fond::anime(int x, int y, const int SOL ) //position x,y du perso
     int Id_niveau=it2->first;
     int Score_max=it2->second;
 
-
-
-	SDL_Rect positionFond, positionZozor, positionPiece, positionMur;
+	SDL_Rect positionFond, positionZozor, positionPiece, positionMur, positionCop, posgameover, positionDebut;
 	int v = 0;
 
-	Joueur j(x,y,"image/goku1.bmp","zoro", v, 15, 1); // augmentation de la valeur l'impulsion pour que ca fasse un gros saut 
+	Joueur j(x,y,"image/goku1.bmp","zoro", v, 15, 1); 
 	Piece p(0,0,"image/pieceMini.bmp",10);	
 	Mur M(50,50,"image/wall.bmp",12);
+    Policier C(634,50,"image/cop1.bmp",1);
+    GameOver G(0,0,"image/press1.bmp");
 
 	int a = x;
 	int b = y;
-	int saut = 0; //on est au sol
-	positionFond.x = 0;
-	positionFond.y = 0;
+	int saut = 0; //au sol
+    InitRect(positionFond, 0, 0);
 
-		M.Charge(1);
+	M.Charge(1);
+    InitRect(positionZozor, x, y);
 
-	positionZozor.x = x;
-	positionZozor.y = y;
-
-     p.Charge(1);
+    p.Charge(1);
 
 
     SDL_Rect* Piece_courante;
-    Piece_courante = p._Pieces.front();
-    p._Pieces.pop_front();
-    positionPiece.x =  Piece_courante->x;
-    positionPiece.y = Piece_courante->y; 
+    ReInitPiece(Piece_courante, p, positionPiece);
+    InitRect(positionCop, C.getX(),299);
 
 	SDL_EnableKeyRepeat(10,5);
 
-	while (1) {
+    int droite = 1;
+    InitRect(positionDebut, 60, 30);
+    SDL_BlitSurface(imageDeDebut, NULL, ecran, &positionDebut);
+    SDL_Flip(ecran);
+    SDL_Delay(10000);
 
-		SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
+	while (1) {        
+
+        SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
 		SDL_BlitSurface(zozor, NULL, ecran, &positionZozor); // Dessiner zozor
 		SDL_BlitSurface(petitepiece, NULL, ecran, &positionPiece);
-		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+        SDL_BlitSurface(cop, NULL, ecran, &positionCop);
+
+        MouvementPolicier(droite, positionCop);
 
 		for (list<SDL_Rect*>::iterator it = M._Mur.begin(); it != M._Mur.end(); it++){
 			SDL_BlitSurface(wall, NULL, ecran, *it);
 		}
 		
 		int S=j.getScore();
-		PrintSDL(ecriture,ecran,100,20,"Niveau: %d \n Score : %d / %d ", Id_niveau, S, Score_max);
+        PrintSDL(ecriture,ecran,10,20,"Niveau:%d\n Score:%d/%d, Timer: %d sec", Id_niveau, S, Score_max, (myTimer.get_ticks()/(1000)));
 
 		SDL_Flip(ecran); // On affiche réellement l'image.
-		input_handle(a, b, v, j, saut, M); // On appelle le gestionnaire d'évènements.
+		input_handle(a, b, v, j, saut, M, C); // On appelle le gestionnaire d'évènements.
 
 		SDL_Delay(10); //attend 10ms pour rafraichir la page 
 	
-
-		j.setX(a);
-		j.setY(b);
+        j(a,b);
 		j.setV(v);
-		positionZozor.x = a;
-		positionZozor.y = b;
+        InitRect(positionZozor, a, b);
 
 // Si le perso attrape une piece
 		
-		if (j.check_collision(positionZozor, positionPiece) == true)
-		{
-	j.setScore(S+10);
-            Piece_courante = p._Pieces.front();
-            p._Pieces.pop_front();
-            positionPiece.x =  Piece_courante->x;
-            positionPiece.y = Piece_courante->y; 
+		if (j.check_collision(positionZozor, positionPiece) == true){
+            j[S+10];
+            ReInitPiece(Piece_courante, p, positionPiece);
 		}
 
 // Passage à un nouveau niveau
+        if (j.check_collision(positionZozor, positionCop) == true){
+            j[-S];
+            InitRect(posgameover, 5, 6);   
+            break;
+        }     
 
- if (j.getScore() >= Score_max)
+
+        if (j.getScore() >= Score_max && myTimer.get_ticks() < 60*1000)
         {
-		//inventaire(ecran)
+        imageDeFond=SDL_LoadBMP("palos.bmp"); // car le niveau 
+        SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
+        myTimer.stop();
+        myTimer.start();
+        M._Mur.clear();
+        p._Pieces.pop_front();
         it2++; // ON avance dans la map pour le score et l'identifiant du niveau 
-        //it1++; // on avance dans le tableau des fonds 
         Id_niveau=it2->first;
-        cout << " identifiant niveau " << endl;
-        cout << Id_niveau << endl;
         Score_max=it2->second;
-        j.setScore(0);
-        imageDeFond=SDL_LoadBMP(tableau[Id_niveau-2].c_str()); // car le niveau 
+        j[0]; //score a 0
+        imageDeFond=SDL_LoadBMP(tableau[Id_niveau-1].c_str()); 
         SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond); // Dessiner le fond
         M.Charge(Id_niveau);
         p.Charge(Id_niveau);
-		SDL_BlitSurface(wall, NULL, ecran, &positionMur);
+		SDL_BlitSurface(wall, NULL, ecran, &positionMur);}
 
-
-
-
-
-
-        } 
-        
-	}
-
+        if (j.getScore() < Score_max && myTimer.get_ticks() > 60*1000) break;
+    }
+    SDL_BlitSurface(gameover, NULL, ecran, &posgameover);
+    SDL_Flip(ecran);
+    FreeS(cop, wall, petitepiece, zozor, ecriture, imageDeFond);
 }
 
 
-
-void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours, Mur M) 
-{
+void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours, Mur M, Policier C){
 	SDL_Event event;	
-	
-	//while (SDL_PollEvent(&event)) {
+
 		SDL_PollEvent(&event);
 		switch (event.type) {
 		case SDL_QUIT:
@@ -209,52 +185,72 @@ void Fond::input_handle(int &a, int &b, int &v, Joueur j, int &sautencours, Mur 
                     exit(0);                
                     break;
                 case SDLK_RIGHT:
-
-                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran, sautencours, M);
+                	j.Deplacement(3,0,_longueurEcran,_hauteurEcran, sautencours, M, C);
                 	a = j.getX();
                 	b = j.getY();
-                	v = j.getV();
-                	
-
+                	v = j.getV();           	
                    	break;
                 case SDLK_LEFT:
-                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran, sautencours, M);
+                	j.Deplacement(-3,0,_longueurEcran,_hauteurEcran, sautencours, M, C);
                 	a = j.getX();
                 	b = j.getY();
-                	v = j.getV();
-                	
+                	v = j.getV();                	
                 	break;
-                case SDLK_UP:
+                case SDLK_UP:                
                 	if (sautencours!=1){
                 	j.saut();
                 	v = j.getV();
                     if (sautencours == 0) sautencours = 1;
                     else if (sautencours==2) sautencours = 3;} //on commence un saut
-                	                	
-                	break;
-  
+                	break;  
                 default:
-                	j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M);
+                	j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M, C);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
                 	break;
             }
             break;
-        default:
-        j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M);
+            default:
+                    j.Deplacement(0,0,_longueurEcran,_hauteurEcran, sautencours, M, C);
                 	a = j.getX();
                 	b = j.getY();
                 	v = j.getV();
         	break;    
 		}  
+}
 
-	//}
-
-
+void Fond::FreeS(SDL_Surface* &cop, SDL_Surface* &wall, SDL_Surface* &petitepiece, SDL_Surface* &zozor, SDL_Surface* &ecriture, SDL_Surface* &imageDeFond){
+    SDL_FreeSurface(cop);
+    SDL_FreeSurface(wall);
+    SDL_FreeSurface(petitepiece);
+    SDL_FreeSurface(zozor);
+    SDL_FreeSurface(ecriture);
+    SDL_FreeSurface(imageDeFond);
 }
 
 
+void Fond::ReInitPiece(SDL_Rect* &Piece_courante, Piece &p, SDL_Rect &positionPiece){
 
+    Piece_courante = p._Pieces.front();
+    p._Pieces.pop_front();
+    positionPiece.x =  Piece_courante->x;
+    positionPiece.y = Piece_courante->y; 
+}
 
+void Fond::MouvementPolicier(int &droite, SDL_Rect &positionCop){
+    if(droite){
+        positionCop.x--; //vers la droite
+        droite = (positionCop.x == 0) ? 0 : 1;
+    }
 
+    if(!droite){
+        positionCop.x++; //vers la gauche
+        droite = (positionCop.x == 634) ? 1 : 0;
+    }
+}
+
+void Fond::InitRect(SDL_Rect &r, int x, int y){
+    r.x = x;
+    r.y = y;
+}
